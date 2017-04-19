@@ -80,6 +80,13 @@ class ClientRequest
     }
 
     /**
+     * removes all queries
+     */
+    public function resetQueries() {
+        $this->queries = [];
+    }
+
+    /**
      * @param callable $event
      */
     public function beforeExecuteQuery(callable $event)
