@@ -123,7 +123,7 @@ class ClientRequest
     public function executeQuery()
     {
         $serializer = new JsonPayloadSerializer($this->format);
-        foreach ($this->queries as $qry) {
+        foreach ($this->queries as $i => $qry) {
             $request = $this->buildRequest($qry);
             if (is_callable($this->eventsList["BeforeExecuteQuery"])) {
                 call_user_func_array($this->eventsList["BeforeExecuteQuery"], array(
@@ -131,11 +131,16 @@ class ClientRequest
                     $qry
                 ));
             }
-            $response = $this->executeQueryDirect($request);
-            if (empty($response)) {
-                continue;
+            try {
+                $response = $this->executeQueryDirect($request);
+                if (empty($response)) {
+                    continue;
+                }
+                $responseType = $this->validateResponse($response);
+            } catch (\Exception $e) {
+                unset($this->queries[$i]);
+                throw $e;
             }
-            $responseType = $this->validateResponse($response);
             //if(is_callable($this->eventsList["AfterExecuteQuery"]))
             //    call_user_func_array($this->eventsList["AfterExecuteQuery"],array($payload));
             //populate object
