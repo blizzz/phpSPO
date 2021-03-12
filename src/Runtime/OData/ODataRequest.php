@@ -160,7 +160,7 @@ class ODataRequest extends ClientRequest
      */
     protected function setRequestHeaders(RequestOptions $request)
     {
-        $request->addCustomHeader("Accept", $this->getSerializationContext()->getMediaType());
+        $request->addCustomHeader("Accept", strtolower($this->getSerializationContext()->getMediaType()));
         $request->addCustomHeader("content-type", $this->getSerializationContext()->getMediaType());
     }
 
